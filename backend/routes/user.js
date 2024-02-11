@@ -11,6 +11,7 @@ const userRouter = express.Router();
 Router.post("/api/v1/user/signup", signup);
 Router.post("/api/v1/user/signin", signin);
 Router.put("/api/v1/user", authMiddleware, update);
+Router.get("/bulk", getBulk);
 
 const userData = z.object({
   username: z.string().email(),
@@ -109,22 +110,49 @@ const updateBody = z.object({
 
 //  function to update the credentials of the user
 
-async function update(req, res){
+async function update(req, res) {
   const { success } = updateBody.safeParse(req.body);
 
-  if(!success){
-    return res.send(403).json({message: "invalid credentials"})
+  if (!success) {
+    return res.send(403).json({ message: "invalid credentials" });
   }
-  
-  try{
 
+  try {
     await User.updateOne({ _id: req.userId }, req.body);
-    return res.send(200).json({message: "credentials updated successfully"});
+    return res.send(200).json({ message: "credentials updated successfully" });
+  } catch (error) {
+    return res.send(403).json({ error: error.errors });
+  }
+}
 
-  } catch(error){
-    return res.send(403).json({error: error.errors});
-  } 
+// get all the users based on the filter input
 
+async function getBulk(req, res) {
+  try {
+
+    const filterWord = req.query.filter || "";
+    const users = User.find({
+
+      $or: [
+
+        { firstName: { $regex: filterWord, $options: "i" } },
+        { secondName: { $regex: filterWord, $options: "i" } },
+
+      ],
+    });
+    res.send(200).json({
+
+      user: users.map((data) => ({
+        username: data.username,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        _id: data._id,
+      })),
+      
+    });
+  } catch (error) {
+    res.send(403).json({error: error});
+  }
 }
 
 module.exports = userRouter;
