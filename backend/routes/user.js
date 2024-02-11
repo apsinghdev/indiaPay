@@ -4,11 +4,13 @@ import User from "../models/user.model";
 import bcryptjs from "bcryptjs";
 import JWT_SECRET from "../config";
 import jwt from "jsonwebtoken";
+import authMiddleware from "../middleware";
 
 const userRouter = express.Router();
 
 Router.post("/api/v1/user/signup", signup);
 Router.post("/api/v1/user/signin", signin);
+Router.put("/api/v1/user", authMiddleware, update);
 
 const userData = z.object({
   username: z.string().email(),
@@ -82,20 +84,47 @@ const signin = async (req, res) => {
 
   const { username, password } = req.body;
   const user = await User.findOne({ username: username });
-  
-  if (user) {
 
+  if (user) {
     const userPassword = user.password;
     const passwordFound = await bcryptjs.compare(password, userPassword);
 
     if (!passwordFound) {
       return res.send(401).json("wrong credentials");
     }
-    const token = jwt.sign({userId: user._id}, JWT_SECRET);
-    return res.status(200).json({token: token});
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET);
+    return res.status(200).json({ token: token });
   } else {
     return res.send(401).json("user not found");
   }
 };
+
+// zod schema to update credentials
+
+const updateBody = z.object({
+  password: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+});
+
+//  function to update the credentials of the user
+
+async function update(req, res){
+  const { success } = updateBody.safeParse(req.body);
+
+  if(!success){
+    return res.send(403).json({message: "invalid credentials"})
+  }
+  
+  try{
+
+    await User.updateOne({ _id: req.userId }, req.body);
+    return res.send(200).json({message: "credentials updated successfully"});
+
+  } catch(error){
+    return res.send(403).json({error: error.errors});
+  } 
+
+}
 
 module.exports = userRouter;
