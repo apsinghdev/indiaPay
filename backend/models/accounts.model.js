@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { number } from "zod";
 const { Schema } = mongoose;
 
 const accountsSchema = new Schema({
