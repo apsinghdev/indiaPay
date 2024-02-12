@@ -5,6 +5,7 @@ import bcryptjs from "bcryptjs";
 import JWT_SECRET from "../config";
 import jwt from "jsonwebtoken";
 import authMiddleware from "../middleware";
+import Account from "../models/accounts.model";
 
 const userRouter = express.Router();
 
@@ -53,6 +54,14 @@ const signup = async (req, res) => {
     firstname: firstname,
     lastname: lastname,
   });
+
+  // create a new account for the user
+
+  await Account.create({
+    userId: userId,
+    balance: 1+ Math.random()*100000000
+
+  })
 
   // save the data in db
 
