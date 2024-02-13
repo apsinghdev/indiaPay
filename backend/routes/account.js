@@ -1,6 +1,6 @@
 import express from "express";
-import Account from "../models/accounts.model";
-import authMiddleware from "../middleware";
+import Account from "../models/accounts.model.js";
+import authMiddleware from "../middleware.js";
 import mongoose from "mongoose";
 
 const router = express.Router();
@@ -67,4 +67,4 @@ async function transferBalance(req, res) {
   }
 }
 
-module.exports = router;
+export default router;

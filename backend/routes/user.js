@@ -1,24 +1,19 @@
 import express, { Router } from "express";
-import { z } from "zod";
-import User from "../models/user.model";
+import z from "zod";
+import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
-import JWT_SECRET from "../config";
+import JWT_SECRET from "../config.js";
 import jwt from "jsonwebtoken";
-import authMiddleware from "../middleware";
-import Account from "../models/accounts.model";
+import authMiddleware from "../middleware.js";
+import Account from "../models/accounts.model.js";
 
 const userRouter = express.Router();
 
-Router.post("/api/v1/user/signup", signup);
-Router.post("/api/v1/user/signin", signin);
-Router.put("/api/v1/user", authMiddleware, update);
-Router.get("/bulk", getBulk);
-
 const userData = z.object({
   username: z.string().email(),
-  password: z.string().required(),
-  firstname: z.string().required(),
-  lastname: z.string().required(),
+  password: z.string().min(1),
+  firstname: z.string().min(1),
+  lastname: z.string().min(1),
 });
 
 // create signup functionality
@@ -164,4 +159,11 @@ async function getBulk(req, res) {
   }
 }
 
-module.exports = userRouter;
+// define the routes
+
+userRouter.post("/api/v1/user/signup", signup);
+userRouter.post("/api/v1/user/signin", signin);
+userRouter.put("/api/v1/user", authMiddleware, update);
+userRouter.get("/bulk", getBulk);
+
+export default userRouter;
