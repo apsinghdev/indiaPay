@@ -28,7 +28,7 @@ const signup = async (req, res) => {
 
   // check if a user already exists in the database
 
-  User.findOne({ username: username }, (err, user) => {
+  await User.findOne({ username: username }, (err, user) => {
     if (user) {
       return res
         .status(409)
@@ -50,13 +50,6 @@ const signup = async (req, res) => {
     lastname: lastname,
   });
 
-  // create a new account for the user
-
-  await Account.create({
-    userId: userId,
-    balance: 1+ Math.random()*100000000
-
-  })
 
   // save the data in db
 
@@ -65,9 +58,18 @@ const signup = async (req, res) => {
     const userId = user._id;
     const token = jwt.sign({ userId }, JWT_SECRET);
 
-    res.send(201).json({ message: "user created successfully", token: token });
+    // create a new account for the user
+
+    await Account.create({
+      userId: userId,
+      balance: 1 + Math.random() * 100000000,
+    });
+
+    res
+      .status(201)
+      .json({ message: "user created successfully", token: token });
   } catch (error) {
-    res.send(500).json(error.message);
+    res.status(500).json(error.message);
   }
 };
 
