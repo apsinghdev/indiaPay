@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express from "express";
 import z from "zod";
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
@@ -12,8 +12,8 @@ const userRouter = express.Router();
 const userData = z.object({
   username: z.string().email(),
   password: z.string().min(1),
-  firstname: z.string().min(1),
-  lastname: z.string().min(1),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
 });
 
 // create signup functionality
@@ -46,8 +46,8 @@ const signup = async (req, res) => {
   const newUser = new User({
     username: username,
     password: hashedPassword,
-    firstname: firstname,
-    lastname: lastname,
+    firstName: firstname,
+    lastName: lastname,
   });
 
 
@@ -65,11 +65,11 @@ const signup = async (req, res) => {
       balance: 1 + Math.random() * 100000000,
     });
 
-    res
+    return res
       .status(201)
       .json({ message: "user created successfully", token: token });
   } catch (error) {
-    res.status(500).json(error.message);
+    return res.status(500).json(error.message);
   }
 };
 
