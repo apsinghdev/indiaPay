@@ -24,17 +24,15 @@ const signup = async (req, res) => {
     return res.status(411).json("Incorrect inputs! Try again.");
   }
 
-  const { username, password, firstname, lastname } = req.body;
+  const { username, password, firstName, lastName } = req.body;
 
   // check if a user already exists in the database
 
-  await User.findOne({ username: username }, (err, user) => {
-    if (user) {
-      return res
-        .status(409)
-        .json({ error: "user already exists. please signin" });
-    }
-  });
+  const data = await User.findOne({ username: username });
+
+  if(data){
+    return res.status(409).json({ error: "user already exists. please signin" })
+  }
 
   // hash the password
 
@@ -46,8 +44,8 @@ const signup = async (req, res) => {
   const newUser = new User({
     username: username,
     password: hashedPassword,
-    firstName: firstname,
-    lastName: lastname,
+    firstName: firstName,
+    lastName: lastName,
   });
 
 
@@ -163,9 +161,9 @@ async function getBulk(req, res) {
 
 // define the routes
 
-userRouter.post("/api/v1/user/signup", signup);
-userRouter.post("/api/v1/user/signin", signin);
-userRouter.put("/api/v1/user", authMiddleware, update);
+userRouter.post("/signup", signup);
+userRouter.post("/signin", signin);
+userRouter.put("/user", authMiddleware, update);
 userRouter.get("/bulk", getBulk);
 
 export default userRouter;
