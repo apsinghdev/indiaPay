@@ -95,12 +95,12 @@ const signin = async (req, res) => {
     const passwordFound = await bcryptjs.compare(password, userPassword);
 
     if (!passwordFound) {
-      return res.send(401).json("wrong credentials");
+      return res.status(401).json("wrong credentials");
     }
     const token = jwt.sign({ userId: user._id }, JWT_SECRET);
     return res.status(200).json({ token: token });
   } else {
-    return res.send(401).json("user not found");
+    return res.status(401).json("user not found");
   }
 };
 
@@ -118,14 +118,23 @@ async function update(req, res) {
   const { success } = updateBody.safeParse(req.body);
 
   if (!success) {
-    return res.send(403).json({ message: "invalid credentials" });
+    return res.status(403).json({ message: "invalid credentials" });
   }
 
   try {
-    await User.updateOne({ _id: req.userId }, req.body);
-    return res.send(200).json({ message: "credentials updated successfully" });
+    // if its the password that needs to be updated, hash it first
+    if(req.body.hasOwnProperty('password')){
+      const { password } = req.body;
+      const hashedPassword = await bcryptjs.hash(password, 10);
+      req.body.password = hashedPassword;
+    }
+      await User.updateOne({ _id: req.userId }, req.body);
+      return res
+        .status(200)
+        .json({ message: "credentials updated successfully" });
+    
   } catch (error) {
-    return res.send(403).json({ error: error.errors });
+    return res.status(403).json({ error: error.errors });
   }
 }
 
@@ -135,7 +144,7 @@ async function getBulk(req, res) {
   try {
 
     const filterWord = req.query.filter || "";
-    const users = User.find({
+    const users = await User.find({
 
       $or: [
 
@@ -144,7 +153,7 @@ async function getBulk(req, res) {
 
       ],
     });
-    res.send(200).json({
+    res.status(200).json({
 
       user: users.map((data) => ({
         username: data.username,
@@ -155,7 +164,7 @@ async function getBulk(req, res) {
       
     });
   } catch (error) {
-    res.send(403).json({error: error});
+    res.status(403).json({error: error});
   }
 }
 
@@ -163,7 +172,7 @@ async function getBulk(req, res) {
 
 userRouter.post("/signup", signup);
 userRouter.post("/signin", signin);
-userRouter.put("/user", authMiddleware, update);
+userRouter.put("/update", authMiddleware, update);
 userRouter.get("/bulk", getBulk);
 
 export default userRouter;
