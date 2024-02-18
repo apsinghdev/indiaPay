@@ -1,7 +1,7 @@
 function Signup() {
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">kaise ho bhaiyo? bhno</h1>
+      <div className="bg-white rounded-md w-5 h-10"></div>
     </div>
   );
 }
