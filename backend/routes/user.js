@@ -56,11 +56,11 @@ const signup = async (req, res) => {
     const userId = user._id;
     const token = jwt.sign({ userId }, JWT_SECRET);
 
-    // create a new account for the user
+    // as i am already rich, so i'll give some money to the new user
 
     await Account.create({
       userId: userId,
-      balance: 1 + Math.random() * 100000000,
+      balance: Math.floor(1 + Math.random() * 100000000),
     });
 
     return res
