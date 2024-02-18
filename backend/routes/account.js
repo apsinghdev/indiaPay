@@ -55,7 +55,7 @@ async function transferBalance(req, res) {
     ).session(session);
 
     await session.commitTransaction();
-    res.status(200).json("transaction successfull");
+    res.status(200).json("transaction successful!");
 
   } catch (error) {
     await session.abortTransaction();

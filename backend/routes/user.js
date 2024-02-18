@@ -60,7 +60,7 @@ const signup = async (req, res) => {
 
     await Account.create({
       userId: userId,
-      balance: Math.floor(1 + Math.random() * 100000000),
+      balance: Math.floor(1 + Math.random() * 10000),
     });
 
     return res
