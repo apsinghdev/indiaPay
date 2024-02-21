@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function Signup() {
   return (
     <div className="flex justify-center items-center h-screen">
@@ -69,6 +71,9 @@ function Signup() {
           >
             Sign Up
           </button>
+          <p className="block font-semibold font-sans text-center text-sm mt-1 text-black">
+            Already have an account?<Link to="/signin" className="underline"> Login</Link>
+          </p>
         </form>
       </div>
     </div>
