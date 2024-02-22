@@ -1,6 +1,52 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Signup() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+  });
+
+  function handleUserInput(event) {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const requestBody = JSON.stringify(formData);
+      const response = await fetch("http://localhost:5000/api/v1/user/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": String(
+            new TextEncoder().encode(requestBody).length
+          ),
+        },
+        body: requestBody,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to login");
+      }
+
+      // Redirect to /dashboard if login is successful
+
+      alert("User created successfully!");
+      navigate("/dashboard");
+      
+    } catch (error) {
+      console.log("Failed to fetch");
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-screen">
       <div
@@ -28,6 +74,8 @@ function Signup() {
             type="text"
             className="block shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
             placeholder="Ajeet"
+            name="firstName"
+            onChange={handleUserInput}
           ></input>
           <label
             htmlFor="last-name"
@@ -40,6 +88,8 @@ function Signup() {
             type="text"
             className="block shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
             placeholder="Pratap Singh"
+            name="lastName"
+            onChange={handleUserInput}
           ></input>
           <label
             htmlFor="email"
@@ -52,6 +102,8 @@ function Signup() {
             type="email"
             className="block shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
             placeholder="buitbyajeet@gmail.com"
+            name="username"
+            onChange={handleUserInput}
           ></input>
           <label
             htmlFor="password"
@@ -64,15 +116,22 @@ function Signup() {
             type="text"
             className="block shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
             placeholder="XXXXXXXXXX"
+            name="password"
+            onChange={handleUserInput}
           ></input>
           <button
             type="submit"
             className="block bg-blue-500 hover:bg-blue-400 w-full align-center text-white font-bold py-2 px-4 rounded mt-8"
+            onClick={handleSubmit}
           >
             Sign Up
           </button>
           <p className="block font-semibold font-sans text-center text-sm mt-1 text-black">
-            Already have an account?<Link to="/signin" className="underline"> Login</Link>
+            Already have an account?
+            <Link to="/signin" className="underline">
+              {" "}
+              Login
+            </Link>
           </p>
         </form>
       </div>
