@@ -39,7 +39,7 @@ function Signup() {
 
       // Redirect to /dashboard if login is successful
 
-      alert("User created successfully!");
+      alert("Your account has been created successfully. Press 'OK'");
       navigate("/dashboard");
       
     } catch (error) {
