@@ -34,12 +34,12 @@ function Signup() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to login");
+        throw new Error("Failed to Create account");
       }
 
       // Redirect to /dashboard if login is successful
 
-      alert("Your account has been created successfully. Press 'OK'");
+      alert('Your account has been created successfully. Press "OK" to continue');
       navigate("/dashboard");
       
     } catch (error) {
