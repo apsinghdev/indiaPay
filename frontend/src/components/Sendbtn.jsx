@@ -1,7 +1,7 @@
 function Sendbtn() {
   return (
     <div>
-      <button className="block bg-blue-500 hover:bg-blue-400 h-10 w-35 align-center text-white font-bold rounded" >
+      <button className="block bg-blue-500 hover:bg-blue-600 h-7 w-40 text-xs align-center text-white font-bold rounded mr-4" >
         Send Money
       </button>
     </div>

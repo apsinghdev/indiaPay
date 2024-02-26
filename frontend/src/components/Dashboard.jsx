@@ -1,10 +1,11 @@
-import Userbar from "./Userbar.jsx"
+import Userbar from "./Userbar"
 
 function Dashboard(){
     return (
       <div>
-        <Userbar></Userbar>
+      <Userbar name="Ajeet" />
       </div>
+      
     );
 }
 
