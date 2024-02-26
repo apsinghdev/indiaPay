@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from "./components/Signup";
 import Singnin from "./components/Signin";
-// import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/Dashboard";
 // import SendMoney from "./components/SendMoney";
 
 function App() {
@@ -11,8 +11,8 @@ function App() {
         <Routes>
           <Route path="/signup" element={<Signup />}></Route>
           <Route path="/signin" element={<Singnin />}></Route>
-          {/* <Route path="/dashboard" element={<Dashboard />}></Route>
-          <Route path="/send" element={<SendMoney />}></Route> */}
+          <Route path="/dashboard" element={<Dashboard />}></Route>
+          {/* <Route path="/send" element={<SendMoney />}></Route> */}
         </Routes>
       </BrowserRouter>
     </div>
