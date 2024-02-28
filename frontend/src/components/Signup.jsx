@@ -1,5 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import jwt from "jsonwebtoken";
+import SECRET_KEY from "../config.js"
+
+console.log(SECRET_KEY)
 
 function Signup() {
   const navigate = useNavigate();
@@ -37,10 +41,14 @@ function Signup() {
         throw new Error("Failed to Create account");
       }
 
+      const token = response.token;
+      const decodedToken = jwt.verify(token, SECRET_KEY)
+      const userId = decodedToken.userId;
+
       // Redirect to /dashboard if login is successful
 
       alert('Your account has been created successfully. Press "OK" to continue');
-      navigate("/dashboard");
+      navigate("/dashboard", { userId: userId});
       
     } catch (error) {
       console.log("Failed to fetch");
