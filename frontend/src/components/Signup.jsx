@@ -37,10 +37,13 @@ function Signup() {
         throw new Error("Failed to Create account");
       }
 
+      const responseData = await response.json();
+      const userId = responseData.userId;
+      
       // Redirect to /dashboard if login is successful
 
       alert('Your account has been created successfully. Press "OK" to continue');
-      navigate("/dashboard");
+      navigate("/dashboard", {state: {userId: userId}});
       
     } catch (error) {
       console.log("Failed to fetch");

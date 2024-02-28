@@ -1,7 +1,11 @@
 import Userbar from "./Userbar"
 import imgPath from "../assets/user-dp.jpg"
+import { useLocation } from "react-router-dom";
 
 function Dashboard(){
+  const location = useLocation();
+  const userId = location.state.userId;
+  console.log(userId);
     return (
       <div className="h-screen w-screen bg-white">
         <div id="headerDiv" className="w-full h-20 bg-white border-b-2 flex justify-between items-center">

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
