@@ -65,7 +65,7 @@ const signup = async (req, res) => {
 
     return res
       .status(201)
-      .json({ message: "user created successfully", token: token });
+      .json({ message: "user created successfully", token: token, userId: userId });
   } catch (error) {
     return res.status(500).json(error.message);
   }
@@ -98,7 +98,7 @@ const signin = async (req, res) => {
       return res.status(401).json("wrong credentials");
     }
     const token = jwt.sign({ userId: user._id }, JWT_SECRET);
-    return res.status(200).json({ token: token });
+    return res.status(200).json({ token: token, userId: user._id });
   } else {
     return res.status(401).json("user not found");
   }
