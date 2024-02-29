@@ -8,6 +8,7 @@ function Dashboard(){
     userName: '',
     balance: ''
   })
+  const [ users, setUsers ] = useState([]);
 
   const location = useLocation();
   const userId = location.state.userId;
@@ -38,8 +39,34 @@ function Dashboard(){
     getUserDetails();
   }, [userId])
 
+  useEffect(()=>{
+    async function getUsers(){
+      const response = await fetch("http://localhost:5000/api/v1/user/bulk",{
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log("second useSTATE")
+      if(!response.ok){
+        throw new Error('failed to get users')
+      }
+
+      const responseData = await response.json();
+      const responseDataArray = responseData.user;
+      console.log(responseData, responseDataArray)
+      setUsers(responseDataArray.map((user)=>({firstName: user.firstName})));
+      console.log(
+        responseDataArray.map((user) => {
+          user.firstName;
+        })
+      );
+    } 
+    getUsers();
+  }, [])
+
     return (
-      <div className="h-screen w-screen bg-white">
+      <div className="h-auto w-auto bg-white overflow-x-hidden">
         <div id="headerDiv" className="w-full h-20 bg-white border-b-2 flex justify-between items-center">
           <h1 className="ml-20 font-sans text-3xl font-bold">IndiaPay</h1>
           <div className="flex justify-between mr-10">
@@ -55,12 +82,8 @@ function Dashboard(){
         <div id="searchbar">
           <input type="search" placeholder="Search users..." className="border border-black rounded-md placeholder:font-sans placeholder: font-sm focus:border-transparent w-10/12 h-8 pl-5 mt-5 ml-16"></input>
         </div>
-        <div className="justify-center h-40 w-full flex-shrink-0 items-center ml-16 space-y-2 mt-10">
-        <Userbar name="Ajeet" />
-        <Userbar name="Ajay" />
-        <Userbar name="Karn" />
-        <Userbar name="Priya" />
-        <Userbar name="Neha" />
+        <div className="justify-center h-auto bg-white w-auto flex-shrink-0 items-center ml-16 space-y-2 mt-10">
+          {users.map((user, i)=>(<Userbar key={i} name={user.firstName} />) )}
         </div>
       </div>
       
