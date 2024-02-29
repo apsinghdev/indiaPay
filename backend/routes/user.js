@@ -168,11 +168,41 @@ async function getBulk(req, res) {
   }
 }
 
+
+// get the user's name and bank balance
+
+async function getDetails(req, res){
+  try{
+
+    const userId = req.query.userid;
+    const user = await User.findOne({ _id: userId});
+
+    if(!user){
+      return res.status(404).json({error: "user not found"})
+    }
+
+    const account = await Account.findOne({userId: userId});
+
+    if(!account){
+      return res.status(404).json({error: "account not found"})
+    };
+
+    const userName = user.firstName;
+    const balance = account.balance;
+    
+    res.status(200).json({userName: userName, balance: balance});
+
+  } catch(error){
+    return res.status(404).json({error: error.message});
+  }
+}
+
 // define the routes
 
 userRouter.post("/signup", signup);
 userRouter.post("/signin", signin);
 userRouter.put("/update", authMiddleware, update);
 userRouter.get("/bulk", getBulk);
+userRouter.get("/getdetails", getDetails);
 
 export default userRouter;
