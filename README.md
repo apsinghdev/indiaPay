@@ -1,5 +1,5 @@
 
-## Build a basic version of PayTM
+# indiaPay
 
 command to build docker image for mongodb
 
